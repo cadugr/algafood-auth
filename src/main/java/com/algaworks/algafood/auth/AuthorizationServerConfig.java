@@ -13,7 +13,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
-	
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
@@ -22,23 +22,27 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		clients.inMemory()
-			.withClient("algafood-web")
-			.secret(passwordEncoder.encode("web123"))
-			.authorizedGrantTypes("password")
-			.scopes("write", "read")
-			.accessTokenValiditySeconds(60 * 60 * 6);
+		clients
+			.inMemory()
+				.withClient("algafood-web")
+				.secret(passwordEncoder.encode("web123"))
+				.authorizedGrantTypes("password")
+				.scopes("write", "read")
+				.accessTokenValiditySeconds(60 * 60 * 6) // 6 horas (padrão é 12 horas)
+			.and()
+				.withClient("checktoken")
+					.secret(passwordEncoder.encode("check123"));
 	}
 	
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-		security.checkTokenAccess("isAuthenticated()");
+//		security.checkTokenAccess("isAuthenticated()");
+		security.checkTokenAccess("permitAll()");
 	}
 	
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-		//Somente necessário para o funcionamento do fluxo password credentials
 		endpoints.authenticationManager(authenticationManager);
 	}
-
+	
 }
