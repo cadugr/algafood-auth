@@ -34,6 +34,13 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 				.scopes("write", "read")
 				.accessTokenValiditySeconds(16 * 60 * 60) // 6 horas (padrão é 12 horas)
 				.refreshTokenValiditySeconds(60 * 24 * 60 * 60) // 60 dias
+				
+			.and()	
+				.withClient("foodanalytics")
+				.secret(passwordEncoder.encode("food123"))
+				.authorizedGrantTypes("authorization_code")
+				.scopes("write", "read")
+				.redirectUris("http://aplicacao-cliente")
 			.and()
 				.withClient("faturamento")
 				.secret(passwordEncoder.encode("faturamento123"))
@@ -46,7 +53,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-//		security.checkTokenAccess("isAuthenticated()");
 		security.checkTokenAccess("permitAll()");
 	}
 	
