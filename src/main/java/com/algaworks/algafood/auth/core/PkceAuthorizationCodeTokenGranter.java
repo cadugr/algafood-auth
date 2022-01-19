@@ -1,4 +1,4 @@
-package com.algaworks.algafood.auth;
+package com.algaworks.algafood.auth.core;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
